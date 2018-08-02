@@ -4,18 +4,20 @@ state = {
 	percentConform: parseInt(document.getElementById('percentConform').value),
 	canvasX: 200,
 	canvasY: 200,
-	maxLife: 30,
-	speed: 10,
+	maxLife: 60,
+	speed: parseInt(document.getElementById('speed').value),
 	dotSize: 7,
 }
 
 function setup() {
 	createCanvas(state.canvasX, state.canvasY);
-	noSmooth();
+	// noSmooth();
 	renderDots();
+	updateSpeed();
 	// Event Handlers
 	document.getElementById('ndots').onchange = renderDots;
 	document.getElementById('percentConform').onchange = moveDots;
+	document.getElementById('speed').onchange = updateSpeed;
 }
 
 function draw() {
@@ -40,7 +42,7 @@ function moveDots() {
 	document.getElementById('percentConfirmValue').innerHTML = state.percentConform;
 	numDotsMove = ceil((state.percentConform/100) * state.ndots);
 	for (var i = 0; i <= numDotsMove; i++) {
-		state.ellipse[i].x = state.ellipse[i].x + state.speed/2;
+		state.ellipse[i].x = state.ellipse[i].x + state.speed;
 		state.ellipse[i].life -= 1;
 		if (state.ellipse[i].life < 0) { respawn(i); }
 		ellipse(state.ellipse[i].x, state.ellipse[i].y, state.dotSize).fill(51);
@@ -52,8 +54,8 @@ function moveDots() {
 	for (var i = numDotsMove; i <= state.ndots; i++){
 		state.ellipse[i].life -= 1;
 		if (state.ellipse[i].life < 0) { respawn(i); }
-		state.ellipse[i].x = state.ellipse[i].x + random(-.5, .5)*state.speed;
-		state.ellipse[i].y = state.ellipse[i].y + random(-.5, .5)*state.speed;
+		state.ellipse[i].x = state.ellipse[i].x + random(-1, 1)*state.speed;
+		state.ellipse[i].y = state.ellipse[i].y + random(-1, 1)*state.speed;
 		ellipse(state.ellipse[i].x, state.ellipse[i].y, state.dotSize).fill(51);
 	}
 	
@@ -66,3 +68,8 @@ function respawn(dotIndex) {
 	state.ellipse[dotIndex].y = y;
 	state.ellipse[dotIndex].life = ceil(random(state.maxLife));
 }
+
+function updateSpeed () {
+	state.speed = parseInt(document.getElementById('speed').value);
+	document.getElementById('speedValue').innerHTML = state.speed;
+};
